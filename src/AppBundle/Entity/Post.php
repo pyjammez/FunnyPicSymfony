@@ -40,32 +40,22 @@ class Post
     /**
      * @ORM\Column(name="views", type="integer")
      */
-    private $views;
+    private $views = 0;
 
     /**
      * @ORM\Column(name="likes", type="integer")
      */
-    private $likes;
+    private $likes = 0;
 
     /**
      * @ORM\Column(name="dislikes", type="integer")
      */
-    private $dislikes;
+    private $dislikes = 0;
 
     /**
      * @ORM\Column(name="comment_count", type="integer")
      */
-    private $commentCount;
-
-    /**
-     * @ORM\Column(name="image", type="string")
-     */
-    private $image;
-
-    /**
-     * @ORM\Column(name="image", type="string")
-     */
-    private $image;
+    private $commentCount = 0;
 
     /**
      * @var \DateTime
@@ -86,6 +76,17 @@ class Post
      * @ORM\JoinColumn(name="gallery_id", referencedColumnName="id")
      */
     private $gallery;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="post", cascade={"all"}, orphanRemoval=true)
+     */
+    private $images;
+
+    public function __construct() {
+        $this->images = new ArrayCollection();
+        $this->dateModified = new  \DateTime();
+        $this->dateCreated = new  \DateTime();
+    }
 
     /**
      * Get id
@@ -323,5 +324,39 @@ class Post
         $this->image = $image;
 
         return $this;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \AppBundle\Entity\Image $image
+     *
+     * @return Post
+     */
+    public function addImage(\AppBundle\Entity\Image $image)
+    {
+        $this->images[] = $image;
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \AppBundle\Entity\Image $image
+     */
+    public function removeImage(\AppBundle\Entity\Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 }

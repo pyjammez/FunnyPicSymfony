@@ -12,6 +12,7 @@ class GalleryAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
+            ->add('category')
             ->add('slug')
             ->add('description');
     }

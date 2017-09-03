@@ -3,16 +3,18 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Image
  *
  * @ORM\Table(name="image")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ImageRepository")
  */
 class Image
 {
-    const SERVER_PATH_TO_IMAGE_FOLDER = '/var/www/html/symfony/web/images';
+    const SERVER_PATH_TO_IMAGE_FOLDER = '/var/www/html/blog/web/images';
 
     /**
      * Unmapped property to handle file uploads
@@ -67,6 +69,9 @@ class Image
 
     /**
      * Lifecycle callback to upload the file to the server
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
      */
     public function lifecycleFileUpload()
     {
@@ -94,16 +99,9 @@ class Image
     /**
      * @var string
      *
-     * @ORM\Column(name="filename", type="string", length=255, unique=true)
+     * @ORM\Column(name="filename", type="string", length=255, unique=true, nullable=true)
      */
     private $filename;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime")
-     */
-    private $created;
 
     /**
      * @var \DateTime
@@ -112,6 +110,11 @@ class Image
      */
     private $updated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="images")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
+     */
+    private $post;
 
     /**
      * Get id
@@ -172,26 +175,26 @@ class Image
     }
 
     /**
-     * Set created
+     * Set post
      *
-     * @param datetime_immutable $created
+     * @param \AppBundle\Entity\Post $post
      *
      * @return Image
      */
-    public function setCreated($created)
+    public function setPost(\AppBundle\Entity\Post $post = null)
     {
-        $this->created = $created;
+        $this->post = $post;
 
         return $this;
     }
 
     /**
-     * Get created
+     * Get post
      *
-     * @return datetime_immutable
+     * @return \AppBundle\Entity\Post
      */
-    public function getCreated()
+    public function getPost()
     {
-        return $this->created;
+        return $this->post;
     }
 }

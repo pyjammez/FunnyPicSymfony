@@ -63,8 +63,13 @@ class Gallery
 
     public function __construct() {
         $this->posts = new ArrayCollection();
+        $this->dateModified = new  \DateTime();
+        $this->dateCreated = new  \DateTime();
     }
 
+    public function __toString() {
+        return $this->slug;
+    }
 
     /**
      * Get id

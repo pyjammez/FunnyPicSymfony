@@ -50,6 +50,12 @@ class Category
 
     public function __construct() {
         $this->galleries = new ArrayCollection();
+        $this->dateModified = new  \DateTime();
+        $this->dateCreated = new  \DateTime();
+    }
+
+    public function __toString() {
+        return $this->slug;
     }
 
     /**
